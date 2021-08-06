@@ -81,4 +81,8 @@ export default function ProviderWidget() {
       </Modal>
     );
   }
+
+  if (error) {
+    return <div>error</div>;
+  }
 }

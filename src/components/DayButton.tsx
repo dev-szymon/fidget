@@ -1,14 +1,18 @@
+import { observer } from 'mobx-react';
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { useMonthContext } from '../context/monthContext';
 import { getMonthAndYear } from '..//lib/dates';
+import { useStore } from '../lib/Store';
 
 interface DayButtonProps extends ButtonProps {
   dateInMS: number;
 }
-export default function DayButton({ dateInMS, ...rest }: DayButtonProps) {
-  const {
-    state: { month, year },
-  } = useMonthContext();
+
+export default observer(function DayButton({
+  dateInMS,
+  ...rest
+}: DayButtonProps) {
+  const { month, year } = useStore();
+
   const day = new Date(dateInMS).getDate();
   const { month: buttonMonth, year: buttonYear } = getMonthAndYear(dateInMS);
 
@@ -19,4 +23,4 @@ export default function DayButton({ dateInMS, ...rest }: DayButtonProps) {
       {day}
     </Button>
   );
-}
+});
