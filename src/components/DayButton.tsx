@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { useMonthContext } from '../context/global';
-import { getMonthAndYear } from '../lib/dates';
+import { useMonthContext } from '../context/monthContext';
+import { getMonthAndYear } from '..//lib/dates';
 
 interface DayButtonProps extends ButtonProps {
   dateInMS: number;

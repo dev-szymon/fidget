@@ -1,6 +1,11 @@
 import Head from 'next/head';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Button, Heading } from '@chakra-ui/react';
 import React from 'react';
+
+const newProvider = async () => {
+  const f = await fetch('/api/providers/create');
+  return await f.json();
+};
 
 export default function Home() {
   return (
@@ -14,6 +19,7 @@ export default function Home() {
       <Box as='main'>
         <Heading as='h1'>Wizyta u barbera w 3 kliknięcia</Heading>
       </Box>
+      <Button onClick={() => newProvider()}>nowy</Button>
     </Box>
   );
 }
