@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Box, Button, Heading } from '@chakra-ui/react';
 import React from 'react';
+import Link from 'next/link';
 
 const newProvider = async () => {
   const f = await fetch('/api/providers/create');
@@ -17,9 +18,12 @@ export default function Home() {
       </Head>
 
       <Box as='main'>
-        <Heading as='h1'>Wizyta u barbera w 3 kliknięcia</Heading>
+        <Heading as='h1'>Kalendarz</Heading>
       </Box>
-      <Button onClick={() => newProvider()}>nowy</Button>
+      <Button onClick={() => newProvider()}>
+        nowy użytkownik - service provider
+      </Button>
+      <Link href='/widget/6102580d2e0fea34bc7f8fe7'>widget</Link>
     </Box>
   );
 }

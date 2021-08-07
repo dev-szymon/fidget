@@ -8,10 +8,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { id } = req.query;
+  if (id) {
+    await dbConnect();
 
-  await dbConnect();
-
-  const provider = await ProviderModel.findById(id);
-
-  res.status(200).json({ provider });
+    const provider = await ProviderModel.findById(id);
+    res.status(200).json({ provider });
+  }
 }

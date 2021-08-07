@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Box, IconButton } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
-import { getMonthAndYear, monthSwitch } from '../lib/dates';
+import { getMonthAndYear, monthSwitch } from '../lib/utils';
 import { useStore } from '../lib/Store';
 import { observer } from 'mobx-react';
 

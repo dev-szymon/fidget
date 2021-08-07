@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { getMonthAndYear } from './dates';
+import { getMonthAndYear } from './utils';
 import { createContext, FC, useContext } from 'react';
 
 function createMonthStore() {

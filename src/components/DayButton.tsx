@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { getMonthAndYear } from '..//lib/dates';
+import { getMonthAndYear } from '../lib/utils';
 import { useStore } from '../lib/Store';
 
 interface DayButtonProps extends ButtonProps {
