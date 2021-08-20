@@ -1,21 +1,35 @@
 import { Schema, models, model, Types, Model } from 'mongoose';
+import { Service } from './Service';
+import { Provider } from './Provider';
 
-interface Appointment {
-  startDate: number;
-  endDate: number;
+interface IAppointmentSchema {
+  startTimestamp: string;
+  endTimestamp: string;
   client: Types.ObjectId | Record<string, unknown>;
   provider: Types.ObjectId | Record<string, unknown>;
   service: Types.ObjectId | Record<string, unknown>;
 }
-const AppointmentSchema = new Schema<Appointment, Model<Appointment>>({
-  startDate: Number,
-  endDate: Number,
-  client: { type: Types.ObjectId, ref: 'Client' },
-  provider: { type: Types.ObjectId, ref: 'Provider' },
-  service: { type: Types.ObjectId, ref: 'Service' },
+
+export interface Appointment
+  extends Omit<IAppointmentSchema, 'provider' | 'service'> {
+  _id: string;
+  provider: Provider;
+  service: Service;
+}
+
+const AppointmentSchema = new Schema<
+  IAppointmentSchema,
+  Model<IAppointmentSchema>
+>({
+  startTimestamp: { type: Date },
+  endTimestamp: { type: Date },
+  client: { type: Types.ObjectId, ref: 'ClientModel' },
+  provider: { type: Types.ObjectId, ref: 'ProviderModel' },
+  service: { type: Types.ObjectId, ref: 'ServiceModel' },
 });
 
-const AppointmentModel: Model<Appointment> =
-  models.Appointment || model<Appointment>('Appointment', AppointmentSchema);
+const AppointmentModel: Model<IAppointmentSchema> =
+  models.Appointment ||
+  model<IAppointmentSchema>('Appointment', AppointmentSchema);
 
 export default AppointmentModel;

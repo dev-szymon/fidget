@@ -8,7 +8,8 @@ import {
   ModalFooter,
   ModalContent,
   Skeleton,
-  Flex,
+  List,
+  ListItem,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
@@ -18,18 +19,22 @@ import CalendarGrid, {
 } from '../../components/CalendarGrid';
 import MonthControl from '../../components/MonthControl';
 import { fetchProvider } from '../../lib/queries';
+import { useStore } from '../../lib/Store';
+import ServiceItem from '../../components/ServiceItem';
 
 export default function ProviderWidget() {
   const {
-    query: { provider },
+    query: { providerId },
   } = useRouter();
 
+  const { service } = useStore();
+
   const { status, data, error } = useQuery(
-    `provider-${provider}`,
-    async () => await fetchProvider(provider as string)
+    `provider-${providerId}`,
+    async () => await fetchProvider(providerId as string)
   );
 
-  if (!provider || status === 'loading') {
+  if (!providerId || status === 'loading') {
     return (
       <Modal
         isOpen
@@ -39,7 +44,7 @@ export default function ProviderWidget() {
       >
         <ModalOverlay />
         <ModalContent>
-          <Skeleton w='70%' />
+          <Skeleton />
           <ModalBody>
             <Skeleton />
             <Skeleton />
@@ -47,9 +52,7 @@ export default function ProviderWidget() {
           </ModalBody>
 
           <ModalFooter>
-            <Flex w='40%'>
-              <Skeleton />
-            </Flex>
+            <Skeleton />
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -66,15 +69,32 @@ export default function ProviderWidget() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{provider}</ModalHeader>
+          <ModalHeader>{providerId}</ModalHeader>
           <ModalBody>
-            <MonthControl />
-            <CalendarGrid provider={data} />
+            {service ? (
+              <>
+                <MonthControl />
+                <CalendarGrid provider={data} />
+              </>
+            ) : (
+              <>
+                <h1>wybierz usługę</h1>
+                <List>
+                  {data.services.map((service) => {
+                    return (
+                      <ListItem key={service._id}>
+                        <ServiceItem service={service} />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </>
+            )}
           </ModalBody>
 
           <ModalFooter>
             <Button colorScheme='teal' mr={3}>
-              Rezerwuję!
+              {service ? `Rezerwuję!` : 'Dalej'}
             </Button>
           </ModalFooter>
         </ModalContent>

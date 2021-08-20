@@ -1,11 +1,34 @@
 import Head from 'next/head';
-import { Box, Button, Heading } from '@chakra-ui/react';
+import { Flex, Box, Button, Heading } from '@chakra-ui/react';
 import React from 'react';
 import Link from 'next/link';
 
 const newProvider = async () => {
   const f = await fetch('/api/providers/create');
   return await f.json();
+};
+const newAppointment = async () => {
+  const f = await fetch('/api/appointments/create');
+  return await f.json();
+};
+const getAvailability = async () => {
+  const f = await fetch(
+    '/api/appointments/611586d59197e22560b9d2c9/2021-08-18/6115877d9197e22560b9d2d0'
+  );
+  return await f.json();
+};
+
+const newService = async () => {
+  const body = {
+    name: 'haircut',
+    durationInMinutes: 15,
+    providerId: '611586d59197e22560b9d2c9',
+  };
+  const service = await fetch('/api/services/create', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return await service.json();
 };
 
 export default function Home() {
@@ -17,13 +40,16 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <Box as='main'>
+      <Flex as='main' direction='column'>
         <Heading as='h1'>Kalendarz</Heading>
-      </Box>
-      <Button onClick={() => newProvider()}>
-        nowy użytkownik - service provider
-      </Button>
-      <Link href='/widget/6102580d2e0fea34bc7f8fe7'>widget</Link>
+        <Button onClick={() => newProvider()}>
+          nowy użytkownik - service provider
+        </Button>
+        <Button onClick={() => newAppointment()}>nowa wizyta</Button>
+        <Button onClick={() => newService()}>nowa usługa - service</Button>
+        <Button onClick={() => getAvailability()}>fetch availability</Button>
+        <Link href='/widget/611586d59197e22560b9d2c9'>widget</Link>
+      </Flex>
     </Box>
   );
 }

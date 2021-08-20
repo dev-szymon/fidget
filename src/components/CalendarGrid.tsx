@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, GridItem, Skeleton } from '@chakra-ui/react';
-import { generateMonthArray, MS24HOUR } from '../lib/utils';
+import { generateMonthArray, getFirstMonthDay, MS24HOUR } from '../lib/utils';
 import DayButton from './DayButton';
 import { useStore } from '../lib/Store';
 import { observer } from 'mobx-react';
 
 export default observer(function CalendarGrid({ provider }: any) {
-  const { month, year } = useStore();
+  const { month, year, selectDay } = useStore();
   const currentDateMS = Date.now();
   const { availability } = provider;
+
+  useEffect(() => {
+    const getStartingDay = (date: number): number => {
+      return date > Date.now() ? date : getStartingDay(date + MS24HOUR);
+    };
+    const calculateFirstAvailableDay = (
+      month: number,
+      year: number,
+      availability: number[]
+    ) => {
+      return availability.reduce((curr, next) => {
+        const weekday = new Date(curr).getDay() || 7;
+        return availability.includes(weekday) ? curr : curr + MS24HOUR;
+      }, getStartingDay(getFirstMonthDay(month, year).getTime()));
+    };
+    const select = calculateFirstAvailableDay(month, year, availability);
+    selectDay(select);
+  }, [month, year, availability, selectDay]);
 
   return (
     <Grid gridTemplateColumns='repeat(7, 1fr)'>
@@ -22,7 +40,6 @@ export default observer(function CalendarGrid({ provider }: any) {
                 !availability.includes(weekday)
               }
               dateInMS={date}
-              variant='ghost'
               colorScheme='teal'
             />
           </GridItem>
