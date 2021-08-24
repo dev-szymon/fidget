@@ -12,10 +12,10 @@ export default async function handler(
   const providerId = '611586d59197e22560b9d2c9';
 
   const newAppointment = await AppointmentModel.create({
-    startTimestamp: '2021-08-18T15:15:00.000Z',
-    endTimestamp: '2021-08-18T15:30:00.000Z',
+    startTimestamp: '2021-08-18T16:00:00.000Z',
+    endTimestamp: '2021-08-18T16:45:00.000Z',
     provider: providerId,
-    service: '6115877d9197e22560b9d2d0',
+    service: '61224c52ef86fb3dbc524479',
   });
 
   const monthRecord = await DayRecordModel.findOne({

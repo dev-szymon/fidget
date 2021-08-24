@@ -7,12 +7,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { durationInMinutes, providerId } = JSON.parse(req.body);
+  const { durationInMinutes, providerId, name } = JSON.parse(req.body);
 
   await dbConnect();
 
   const createdService = await ServiceModel.create({
-    name: 'Haircut',
+    name: name,
     duration: durationInMinutes * 60 * 1000,
     provider: providerId,
   });

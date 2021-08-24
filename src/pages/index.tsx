@@ -20,8 +20,8 @@ const getAvailability = async () => {
 
 const newService = async () => {
   const body = {
-    name: 'haircut',
-    durationInMinutes: 15,
+    name: 'Manicure',
+    durationInMinutes: 45,
     providerId: '611586d59197e22560b9d2c9',
   };
   const service = await fetch('/api/services/create', {

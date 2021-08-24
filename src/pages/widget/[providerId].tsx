@@ -21,13 +21,17 @@ import MonthControl from '../../components/MonthControl';
 import { fetchProvider } from '../../lib/queries';
 import { useStore } from '../../lib/Store';
 import ServiceItem from '../../components/ServiceItem';
+import AppointmentTimePicker from '../../components/AppointmentTimePicker';
+import { observer } from 'mobx-react';
 
-export default function ProviderWidget() {
+export default observer(function ProviderWidget() {
   const {
     query: { providerId },
   } = useRouter();
 
-  const { service } = useStore();
+  const { service, selectedDay } = useStore();
+
+  const date = selectedDay && new Date(selectedDay);
 
   const { status, data, error } = useQuery(
     `provider-${providerId}`,
@@ -75,6 +79,15 @@ export default function ProviderWidget() {
               <>
                 <MonthControl />
                 <CalendarGrid provider={data} />
+                {selectedDay && date && (
+                  <AppointmentTimePicker
+                    date={`${date.getFullYear()}-${
+                      date.getMonth() + 1 < 10 ? '0' : ''
+                    }${date.getMonth() + 1}-${date.getDate()}`}
+                    providerId={providerId as string}
+                    serviceId={service._id}
+                  />
+                )}
               </>
             ) : (
               <>
@@ -105,4 +118,5 @@ export default function ProviderWidget() {
   if (error) {
     return <div>error</div>;
   }
-}
+  return <div></div>;
+});
