@@ -8,6 +8,7 @@ const newProvider = async () => {
 };
 
 export default function Home() {
+  console.log('home')
   return (
     <Box>
       <Head>
