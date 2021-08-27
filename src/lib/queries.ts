@@ -1,16 +1,21 @@
-import { Provider } from '../models/Provider';
+import { Provider } from "../models/Provider";
 
 export const fetchProvider = async (
-  id: string
+  query: string | string[] | undefined
 ): Promise<Provider | undefined> => {
-  if (!id) {
+  type ProviderResponse = { provider: Provider };
+
+  if (!query) {
     return undefined;
   }
-  const response = await fetch(`/api/providers/${id}`, {
-    method: 'GET',
-    credentials: 'same-origin',
+
+  const isArray = typeof query === "object" && query.length;
+
+  const response = await fetch(`/api/providers/${isArray ? query[0] : query}`, {
+    method: "GET",
+    credentials: "same-origin",
   });
-  const { provider }: { provider: Provider } = await response.json();
+  const { provider }: ProviderResponse = await response.json();
   return provider;
 };
 
@@ -25,8 +30,8 @@ export const fetchAvailability = async (
   const response = await fetch(
     `/api/appointments/${providerId}/${date}/${serviceId}`,
     {
-      method: 'GET',
-      credentials: 'same-origin',
+      method: "GET",
+      credentials: "same-origin",
     }
   );
   const { availableAppointmentTimes }: { availableAppointmentTimes: any } =

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   Modal,
@@ -7,61 +7,36 @@ import {
   ModalBody,
   ModalFooter,
   ModalContent,
-  Skeleton,
   List,
   ListItem,
-} from '@chakra-ui/react';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-
-import CalendarGrid, {
-  CalendarGridSkeleton,
-} from '../../components/CalendarGrid';
-import MonthControl from '../../components/MonthControl';
-import { fetchProvider } from '../../lib/queries';
-import { useStore } from '../../lib/Store';
-import ServiceItem from '../../components/ServiceItem';
-import AppointmentTimePicker from '../../components/AppointmentTimePicker';
-import { observer } from 'mobx-react';
+  Spinner,
+  Heading,
+  Flex,
+} from "@chakra-ui/react";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
+import CalendarGrid from "../../components/CalendarGrid";
+import MonthControl from "../../components/MonthControl";
+import { fetchProvider } from "../../lib/queries";
+import { useStore } from "../../lib/Store";
+import ServiceItem from "../../components/ServiceItem";
+import AppointmentTimePicker from "../../components/AppointmentTimePicker";
+import { observer } from "mobx-react";
+import { generateDateString } from "../../lib/utils";
 
 export default observer(function ProviderWidget() {
   const {
     query: { providerId },
   } = useRouter();
 
-  const { service, selectedDay } = useStore();
+  const { service, selectedDay, selectedDayString } = useStore();
 
-  const date = selectedDay && new Date(selectedDay);
+  const date = selectedDay && generateDateString(new Date(selectedDay));
 
-  const { status, data, error } = useQuery(
+  const { data, error } = useQuery(
     `provider-${providerId}`,
-    async () => await fetchProvider(providerId as string)
+    async () => await fetchProvider(providerId)
   );
-
-  if (!providerId || status === 'loading') {
-    return (
-      <Modal
-        isOpen
-        onClose={() => {
-          return;
-        }}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <Skeleton />
-          <ModalBody>
-            <Skeleton />
-            <Skeleton />
-            <CalendarGridSkeleton />
-          </ModalBody>
-
-          <ModalFooter>
-            <Skeleton />
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    );
-  }
 
   if (data) {
     return (
@@ -73,7 +48,7 @@ export default observer(function ProviderWidget() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{providerId}</ModalHeader>
+          <ModalHeader>{data.name}</ModalHeader>
           <ModalBody>
             {service ? (
               <>
@@ -81,9 +56,7 @@ export default observer(function ProviderWidget() {
                 <CalendarGrid provider={data} />
                 {selectedDay && date && (
                   <AppointmentTimePicker
-                    date={`${date.getFullYear()}-${
-                      date.getMonth() + 1 < 10 ? '0' : ''
-                    }${date.getMonth() + 1}-${date.getDate()}`}
+                    date={date}
                     providerId={providerId as string}
                     serviceId={service._id}
                   />
@@ -91,7 +64,9 @@ export default observer(function ProviderWidget() {
               </>
             ) : (
               <>
-                <h1>wybierz usługę</h1>
+                <Heading as="h4" fontSize="1rem">
+                  wybierz usługę
+                </Heading>
                 <List>
                   {data.services.map((service) => {
                     return (
@@ -106,9 +81,11 @@ export default observer(function ProviderWidget() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='teal' mr={3}>
-              {service ? `Rezerwuję!` : 'Dalej'}
-            </Button>
+            {service && (
+              <Button colorScheme="teal" mr={3}>
+                Rezerwuję!
+              </Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -118,5 +95,20 @@ export default observer(function ProviderWidget() {
   if (error) {
     return <div>error</div>;
   }
-  return <div></div>;
+
+  return (
+    <Modal
+      isOpen
+      onClose={() => {
+        return;
+      }}
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <Flex height="60vh" justify="center" align="center">
+          <Spinner colorScheme="teal" />
+        </Flex>
+      </ModalContent>
+    </Modal>
+  );
 });

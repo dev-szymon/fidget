@@ -1,8 +1,9 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { observer } from 'mobx-react';
-import * as React from 'react';
-import { useQuery } from 'react-query';
-import { fetchAvailability } from '../lib/queries';
+import * as React from "react";
+import { Box, Button, HStack } from "@chakra-ui/react";
+import { observer } from "mobx-react";
+import { useQuery } from "react-query";
+import { fetchAvailability } from "../lib/queries";
+import { generateHourMinutesString } from "../lib/utils";
 
 interface AppointmentTimePickerProps {
   date: string;
@@ -20,19 +21,20 @@ export default observer(function AppointmentTimePicker({
     async () => await fetchAvailability(date, providerId, serviceId)
   );
   if (data) {
-    console.log(data);
     return (
-      <Flex>
+      <HStack overflowX="scroll" overflowY="hidden" pt="1rem" pb="0.5rem">
         {data.map((d: number) => {
-          const minutes = new Date(d).getMinutes();
-          const hours = new Date(d).getHours();
+          const displayTime = generateHourMinutesString(
+            new Date(d).getHours(),
+            new Date(d).getMinutes()
+          );
           return (
-            <Box key={d}>{`${hours}:${
-              minutes < 10 ? `0${minutes}` : minutes
-            }`}</Box>
+            <Button minW="4rem" variant="outline" mr="0.5rem" key={d}>
+              {displayTime}
+            </Button>
           );
         })}
-      </Flex>
+      </HStack>
     );
   }
 

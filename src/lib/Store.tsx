@@ -1,7 +1,7 @@
-import { makeAutoObservable } from 'mobx';
-import { getMonthAndYear } from './utils';
-import { createContext, FC, useContext } from 'react';
-import { Service } from '../models/Service';
+import { makeAutoObservable } from "mobx";
+import { generateDateString, getMonthAndYear } from "./utils";
+import { createContext, FC, useContext } from "react";
+import { Service } from "../models/Service";
 
 interface Store {
   selectedDay?: number;
@@ -12,12 +12,18 @@ interface Store {
   prevMonth: () => void;
   selectDay: (dateInMS: number) => void;
   selectService: (service: Service) => void;
+  selectedDayString: string | undefined;
 }
 
 function createMonthStore() {
   const { month, year } = getMonthAndYear(Date.now());
   const store = makeAutoObservable<Store>({
     selectedDay: undefined,
+    get selectedDayString() {
+      if (!this.selectedDay) return undefined;
+
+      return generateDateString(new Date(this.selectedDay));
+    },
     service: undefined,
     month,
     year,
@@ -46,8 +52,6 @@ function createMonthStore() {
   });
   return store;
 }
-
-// type Store = ReturnType<typeof createMonthStore>;
 
 const StoreContext = createContext(createMonthStore());
 

@@ -24,29 +24,29 @@ export function generateMonthArray(month: number, year: number) {
 export function monthSwitch(month: number) {
   switch (month) {
     case 0:
-      return 'Styczeń';
+      return "Styczeń";
     case 1:
-      return 'Luty';
+      return "Luty";
     case 2:
-      return 'Marzec';
+      return "Marzec";
     case 3:
-      return 'Kwiecień';
+      return "Kwiecień";
     case 4:
-      return 'Maj';
+      return "Maj";
     case 5:
-      return 'Czerwiec';
+      return "Czerwiec";
     case 6:
-      return 'Lipiec';
+      return "Lipiec";
     case 7:
-      return 'Sierpień';
+      return "Sierpień";
     case 8:
-      return 'Wrzesień';
+      return "Wrzesień";
     case 9:
-      return 'Październik';
+      return "Październik";
     case 10:
-      return 'Listopad';
+      return "Listopad";
     case 11:
-      return 'Grudzień';
+      return "Grudzień";
     default:
       return month;
   }
@@ -58,5 +58,16 @@ export function getMonthAndYear(dateInMS: number) {
   const month = date.getMonth();
   return { month, year };
 }
+
+export const generateDateString = (date: Date) => {
+  return `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? "0" : ""}${
+    date.getMonth() + 1
+  }-${date.getDate()}`;
+};
+
+export const generateHourMinutesString = (hour: number, minutes: number) => {
+  const doubleDigitMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  return `${hour}:${doubleDigitMinutes}`;
+};
 
 export const MS24HOUR = 1000 * 60 * 60 * 24;
